@@ -1,0 +1,8 @@
+python-telegram-bot
+fastapi
+uvicorn
+SQLAlchemy
+pydantic
+aiohttp
+asyncpg
+psycopg2-binary
