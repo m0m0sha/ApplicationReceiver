@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql://vova:ghbdtnkjk@localhost/ApplicationReceiver"
+DATABASE_URL = "postgresql://vova:ghbdtnkjk@147.45.247.107:5432/ApplicationReceiver"
 
 engine = create_engine(DATABASE_URL)  # Подключение к БД
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)  # Будет использоваться для сессий с БД
