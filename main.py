@@ -1,7 +1,7 @@
 import asyncio
 import aiohttp
 from microapi import app
-from models import Application, SessionLocal
+from models import Application, SessionLocal, init_db
 from telegram import Update
 from telegram.ext import Application as TelegramApplication, CommandHandler, ContextTypes
 from users import get_user
@@ -73,7 +73,9 @@ async def stop_telegram_bot():
 
 @app.on_event("startup")
 async def startup_event():
+    await init_db()
     asyncio.create_task(run_telegram_bot())
+
 
 
 @app.on_event("shutdown")
