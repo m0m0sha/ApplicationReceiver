@@ -4,7 +4,16 @@ from sqlalchemy.orm import Session
 from models import ApplicationCreate, Application, SessionLocal, Base, engine
 
 app = FastAPI()  # Создает приложения FastAPI
-Base.metadata.create_all(bind=engine)  # Создает таблицы из models
+
+
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all) # Создает таблицы из models
+
+
+@app.on_event("startup")
+async def startup():
+    await init_db()
 
 
 # https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/
