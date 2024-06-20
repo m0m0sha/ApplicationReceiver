@@ -38,7 +38,6 @@ async def apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                                                               'команды /apply')
 
 
-
 async def register(update: Update, context: ContextTypes.DEFAULT_TYPE):
     args = context.args
     if len(args) != 2:
@@ -46,15 +45,22 @@ async def register(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                                                               '/register <email> <password>')
         return
     email, password = args
-    url = f"http://m0m0sha-applicationreceiver-284d.twc1.net/users"
-    data = {"email": email, "password": password}
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, json=data) as response:
-            if response.status == 200:
-                await context.bot.send_message(chat_id=update.effective_chat.id, text='Вы успешно зарегистрировались!')
-            else:
-                await context.bot.send_message(chat_id=update.effective_chat.id, text='При регистрации произошла '
-                                                                                      'ошибка!')
+    async with SessionLocal() as db:
+        db_user = await get_user(db, email=email)
+        if db_user:
+            await context.bot.send_message(chat_id=update.effective_chat.id, text='Пользователь с таким email уже '
+                                                                                  'зарегистрирован!')
+            return
+        url = f"http://m0m0sha-applicationreceiver-284d.twc1.net/users"
+        data = {"email": email, "password": password}
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=data) as response:
+                if response.status == 200:
+                    await context.bot.send_message(chat_id=update.effective_chat.id, text='Вы успешно '
+                                                                                          'зарегистрировались!')
+                else:
+                    await context.bot.send_message(chat_id=update.effective_chat.id, text='При регистрации произошла '
+                                                                                          'ошибка!')
 
 telegram_application = TelegramApplication.builder().token(TOKEN).build()  # Инициализация бота
 telegram_application.add_handler(CommandHandler("start", start))
