@@ -34,8 +34,8 @@ class Application(Base):  # Модель таблицы для БД
     __tablename__ = "applications"
     id = Column(Integer, primary_key=True, index=True)
     application = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", back_populates="applications")
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", back_populates="applications")
 
 
 class User(Base):

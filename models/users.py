@@ -6,6 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 from starlette.status import HTTP_401_UNAUTHORIZED
 from models.models import User, TokenData, get_db
 
@@ -36,14 +37,10 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-async def get_user(db, email=None, telegram_id=None):
-    if email:
-        result = await db.execute(select(User).filter(User.email == email))
-    elif telegram_id:
-        result = await db.execute(select(User).filter(User.telegram_id == telegram_id))
-    else:
-        return None
-    return result.scalars().first()
+async def get_user(db, email):
+    stmt = select(User).options(selectinload(User.applications)).filter(User.email == email)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
 
 
 async def authenticate_user(db, email: str, password: str):
