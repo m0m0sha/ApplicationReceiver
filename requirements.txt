@@ -6,3 +6,4 @@ pydantic
 aiohttp
 asyncpg
 psycopg2-binary
+asyncpg

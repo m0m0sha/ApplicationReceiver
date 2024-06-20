@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql://vova:ghbdtnkjk@147.45.247.107:5432/ApplReceiver"
+DATABASE_URL = "postgresql+asyncpg://vova:ghbdtnkjk@147.45.247.107:5432/ApplReceiver"
 
 engine = create_async_engine(DATABASE_URL, echo=True)  # Подключение к БД
 SessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)  # Будет использоваться для сессий с БД
