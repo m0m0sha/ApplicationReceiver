@@ -4,7 +4,7 @@ from jose import JWTError, jwt
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from sqlalchemy import select
+from sqlalchemy import select, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_401_UNAUTHORIZED
 from models.models import User, TokenData, get_db
@@ -37,7 +37,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 async def get_user(db, email: str):
-    return await db.execute(select(User).filter(User.email == email))
+    result: Result = await db.execute(select(User).filter(User.email == email))
+    return result.scalars().first()
 
 
 async def authenticate_user(db, email: str, password: str):

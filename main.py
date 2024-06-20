@@ -27,7 +27,7 @@ async def apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
                                                                                       'команду /register <email> '
                                                                                       '<password> для регистрации')
                 return
-            db_application = Application(application=application_text)
+            db_application = Application(application=application_text, owner_id=db_user.id)
             db.add(db_application)
             await db.commit()
             await db.close()
@@ -36,6 +36,7 @@ async def apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text='Пожалуйста, напишите текст заявки после '
                                                                               'команды /apply')
+
 
 
 async def register(update: Update, context: ContextTypes.DEFAULT_TYPE):
