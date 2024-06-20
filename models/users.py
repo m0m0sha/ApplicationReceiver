@@ -36,8 +36,13 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-async def get_user(db, email: str):
-    result: Result = await db.execute(select(User).filter(User.email == email))
+async def get_user(db, email=None, telegram_id=None):
+    if email:
+        result = await db.execute(select(User).filter(User.email == email))
+    elif telegram_id:
+        result = await db.execute(select(User).filter(User.telegram_id == telegram_id))
+    else:
+        return None
     return result.scalars().first()
 
 
