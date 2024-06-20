@@ -15,13 +15,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):  # Update �
 async def apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     application_text = ' '.join(context.args)
     if application_text:
-        db = SessionLocal()
-        db_application = Application(application=application_text)
-        db.add(db_application)
-        db.commit()
-        db.close()
-        await context.bot.send_message(chat_id=update.effective_chat.id, text=f'Ваша заявка "{application_text}" была '
-                                                                              'принята!')
+        async with SessionLocal() as db:
+            db_application = Application(application=application_text)
+            db.add(db_application)
+            await db.commit()
+            await db.close()
+            await context.bot.send_message(chat_id=update.effective_chat.id, text=f'Ваша заявка "{application_text}" была '
+                                                                                  'принята!')
     else:
         await context.bot.send_message(chat_id=update.effective_chat.id, text='Пожалуйста, напишите текст заявки после '
                                                                               'команды /apply')
