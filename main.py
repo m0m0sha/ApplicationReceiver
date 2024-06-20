@@ -20,12 +20,6 @@ async def apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     application_text = ' '.join(context.args)
     if application_text:
         async with SessionLocal() as db:
-            telegram_user = update.effective_user
-            if not telegram_user.username:
-                await context.bot.send_message(chat_id=update.effective_chat.id, text='Введите имя пользователя перед '
-                                                                                      'заявкой')
-                return
-
             db_user = await get_user(db, email=update.effective_user.email)
             if not db_user:
                 await context.bot.send_message(chat_id=update.effective_chat.id, text='Для начала вам нужно '
