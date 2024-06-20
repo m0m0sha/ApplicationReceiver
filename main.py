@@ -1,9 +1,13 @@
+import asyncio
 import aiohttp
-from models import Application, SessionLocal
+from fastapi import FastAPI
+from models.models import Application, SessionLocal, init_db
 from telegram import Update
 from telegram.ext import Application as TelegramApplication, CommandHandler, ContextTypes
-from users import get_user
+from models.users import get_user
 
+
+app = FastAPI()  # Создает приложения FastAPI
 TOKEN = '7378792011:AAFxT5ebUjpHLRmQkn1047vRpdtWkg1Ai0c'
 
 
@@ -67,3 +71,14 @@ async def stop_telegram_bot():
     await telegram_application.updater.stop()  # Остановка цикла опроса обновлений
     await telegram_application.stop()
     await telegram_application.shutdown()
+
+
+@app.on_event("startup")
+async def startup_event():
+    await init_db()
+    asyncio.create_task(run_telegram_bot())
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await stop_telegram_bot()

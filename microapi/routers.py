@@ -1,17 +1,14 @@
-import asyncio
 from datetime import timedelta
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_401_UNAUTHORIZED
-from main import run_telegram_bot, stop_telegram_bot
-from models import ApplicationCreate, Application, User, UserCreate, Token, get_db, init_db
-from users import get_user, get_password_hash, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, \
-    get_current_active_user
-
-app = FastAPI()  # Создает приложения FastAPI
+from main import app
+from models.models import ApplicationCreate, Application, User, UserCreate, Token, get_db
+from models.users import (get_user, get_password_hash, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES,
+                          create_access_token, get_current_active_user)
 
 
 @app.post("/applications", response_model=ApplicationCreate)
@@ -39,7 +36,7 @@ async def get_application(application_id: int, db: Session = Depends(get_db)):
     return application
 
 
-@app.post("/users", response_model=UserCreate)
+@app.post("/users", response_model=User)
 async def create_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
     db_user = await get_user(db, email=user.email)
     if db_user:
@@ -71,14 +68,3 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 @app.get("/users/me", response_model=User)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
-
-
-@app.on_event("startup")
-async def startup_event():
-    await init_db()
-    asyncio.create_task(run_telegram_bot())
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    await stop_telegram_bot()
