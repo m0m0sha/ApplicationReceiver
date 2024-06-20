@@ -30,6 +30,14 @@ async def get_db(): # Открывает и закрывает сессию, к�
             await session.close()
 
 
+class Application(Base):  # Модель таблицы для БД
+    __tablename__ = "applications"
+    id = Column(Integer, primary_key=True, index=True)
+    application = Column(String, index=True)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    owner = relationship("User", back_populates="applications")
+
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -55,14 +63,6 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
-
-
-class Application(Base):  # Модель таблицы для БД
-    __tablename__ = "applications"
-    id = Column(Integer, primary_key=True, index=True)
-    application = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
-    owner = relationship("User", back_populates="applications")
 
 
 class ApplicationCreate(BaseModel):  # Модель для создания заявки
