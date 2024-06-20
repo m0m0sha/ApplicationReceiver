@@ -1,8 +1,8 @@
 from datetime import timedelta
-
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
+from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_401_UNAUTHORIZED
@@ -25,9 +25,15 @@ async def startup():
 
 
 # https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/
-async def get_db():  # Открывает и закрывает сессию, когда запрос выполнен
+async def get_db(): # Открывает и закрывает сессию, когда запрос выполнен
     async with SessionLocal() as session:
-        yield session
+        try:
+            yield session
+        except OperationalError:
+            session.rollback()  # Если БД отключилась
+            raise
+        finally:
+            await session.close()
 
 
 @app.post("/applications", response_model=ApplicationCreate)

@@ -4,7 +4,6 @@ from microapi import app
 from models import Application, SessionLocal
 from telegram import Update
 from telegram.ext import Application as TelegramApplication, CommandHandler, ContextTypes
-
 from users import get_user
 
 TOKEN = '7378792011:AAFxT5ebUjpHLRmQkn1047vRpdtWkg1Ai0c'

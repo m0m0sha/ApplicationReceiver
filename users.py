@@ -7,7 +7,6 @@ from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_401_UNAUTHORIZED
-
 from microapi import get_db
 from models import User, TokenData
 
