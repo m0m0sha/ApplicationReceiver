@@ -34,8 +34,6 @@ class Application(Base):  # Модель таблицы для БД
     __tablename__ = "applications"
     id = Column(Integer, primary_key=True, index=True)
     application = Column(String, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship("User", back_populates="applications")
 
 
 class User(Base):
@@ -44,7 +42,6 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
-    applications = relationship("Application", back_populates="user")
 
 
 class UserCreate(BaseModel):
