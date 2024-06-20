@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from models import ApplicationCreate, Application, SessionLocal, Base, engine, User, UserCreate, Token
-from users import get_user, get_password_hash, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, \
+from .users import get_user, get_password_hash, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, \
     get_current_active_user
 
 app = FastAPI()  # Создает приложения FastAPI
