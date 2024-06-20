@@ -39,7 +39,7 @@ async def get_application(application_id: int, db: Session = Depends(get_db)):
     return application
 
 
-@app.post("/users", response_model=User)
+@app.post("/users", response_model=UserCreate)
 async def create_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
     db_user = await get_user(db, email=user.email)
     if db_user:
