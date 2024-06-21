@@ -1,4 +1,6 @@
-from fastapi import Depends, FastAPI, HTTPException
+from typing import List, Optional
+
+from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
@@ -35,9 +37,26 @@ async def create_application(application: ApplicationCreate, db: AsyncSession = 
     return db_application
 
 
-@app.get("/applications", response_model=list[ApplicationCreate])
-async def get_applications(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Application))
+@app.get("/applications", response_model=List[ApplicationCreate])
+async def get_applications(
+        db: AsyncSession = Depends(get_db),
+        limit: int = Query(10, ge=1, le=100),
+        offset: int = Query(0, ge=0),
+        order_by: Optional[str] = Query(None),
+        filter_by_text: Optional[str] = Query(None)):
+    query = select(Application)
+    if filter_by_text:  # Фильтрация
+        query = query.filter(Application.application.contains(filter_by_text))
+    if order_by:  # Сортировка
+        if hasattr(Application, order_by.lstrip("-")):
+            if order_by.startswith("-"):
+                query = query.order_by(getattr(Application, order_by[1:]).desc())
+            else:
+                query = query.order_by(getattr(Application, order_by).asc())
+        else:
+            raise HTTPException(status_code=400, detail=f"Invalid order_by field: {order_by}")
+    query = query.limit(limit).offset(offset)  # Пагинация
+    result = await db.execute(query)
     applications = result.scalars().all()  # Получает все записи таблицы
     return applications
 
