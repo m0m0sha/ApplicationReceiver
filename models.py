@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -18,4 +18,4 @@ class Application(Base):  # Модель таблицы для БД
 
 
 class ApplicationCreate(BaseModel):  # Модель для создания заявки
-    application: str
+    application: constr(min_length=1, max_length=1000, strip_whitespace=True)
