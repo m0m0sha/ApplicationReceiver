@@ -9,3 +9,10 @@
 password
   String should have at least 8 characters [type=string_too_short, input_value='ddd', input_type=str]
     For further information visit https://errors.pydantic.dev/2.7/v/string_too_short
+2024-07-04 23:24:13,917 - app.utils.logger - INFO - Empty application text sent
+2024-07-04 23:24:32,110 - app.utils.logger - INFO - Application sent: ChipiChipi
+2024-07-04 23:24:55,391 - app.utils.logger - ERROR - User registration failed: 1 validation error for UserCreate
+email
+  value is not a valid email address: The email address is not valid. It must have exactly one @-sign. [type=value_error, input_value='email', input_type=str]
+2024-07-04 23:25:14,229 - app.utils.logger - INFO - User registered: email@mail.ru
+2024-07-04 23:25:34,415 - app.utils.logger - INFO - Applications fetched successfully
