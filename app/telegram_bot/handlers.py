@@ -1,11 +1,12 @@
 from telegram import Update
 from telegram.ext import ContextTypes
+from app.core.dependencies import add_to_db
 from app.db.models import Application, User, SessionLocal
 from app.db.schemas import UserCreate
 from app.utils.logger import logger
 from app.utils.security import hash_password
 from app.telegram_bot.telegram_operations import send_message
-from app.utils.errors import SendMessageError, DatabaseError, UserExists, UserNotFound
+from app.utils.errors import SendMessageError, DatabaseError
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -37,8 +38,7 @@ async def apply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         async with SessionLocal() as db:
             db_application = Application(application=application_text)
-            db.add(db_application)
-            await db.commit()
+            await add_to_db(db_application)
             await send_message(context, chat_id, f'Ваша заявка "{application_text}" была принята!')
         logger.info(f"Application sent: {application_text}")
     except DatabaseError as e:
@@ -61,12 +61,9 @@ async def register(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     email, password = context.args
     try:
-        async with SessionLocal() as db:
-            user_data = UserCreate(email=email, password=password)
-            db_user = User(email=user_data.email, hashed_password=hash_password(user_data.password))
-            db.add(db_user)
-            await db.commit()
-            await db.refresh(db_user)
+        user_data = UserCreate(email=email, password=password)
+        db_user = User(email=user_data.email, hashed_password=hash_password(user_data.password))
+        await add_to_db(db_user)
         try:
             await send_message(context, chat_id, "Регистрация успешна!")
         except SendMessageError as e:

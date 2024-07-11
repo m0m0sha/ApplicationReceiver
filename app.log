@@ -41,3 +41,5 @@ DETAIL:  Ключ "(email)=(1123@mail.ru)" уже существует.
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
 2024-07-11 21:55:42,066 - app.utils.logger - INFO - Empty application text sent
 2024-07-11 21:56:16,105 - app.utils.logger - INFO - Application sent: apply
+2024-07-11 22:06:53,599 - app.utils.logger - INFO - Application sent: apply1
+2024-07-11 22:10:09,865 - app.utils.logger - INFO - User registered: 112113@mail.ru

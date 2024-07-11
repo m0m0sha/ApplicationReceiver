@@ -13,3 +13,10 @@ async def shutdown_db(): # Функция для закрытия базы да�
 async def get_db():
     async with SessionLocal() as session:
         yield session
+
+
+async def add_to_db(model):
+    async with SessionLocal() as db:
+        db.add(model)
+        await db.commit()
+        await db.refresh(model)

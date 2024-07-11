@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.models import User
 from app.db.schemas import UserCreate, UserOut
-from app.core.dependencies import get_db
+from app.core.dependencies import get_db, add_to_db
 from app.utils.security import hash_password, decode_access_token
 from app.utils.logger import logger
 from app.utils.errors import InvalidToken, UserNotFound
@@ -15,13 +15,11 @@ router = APIRouter()
 
 
 @router.post("/register", response_model=UserOut)
-async def register_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
+async def register_user(user: UserCreate):
     hashed_password = hash_password(user.password)
     db_user = User(email=user.email, hashed_password=hashed_password)
-    db.add(db_user)
     try:
-        await db.commit()
-        await db.refresh(db_user)
+        await add_to_db(db_user)
         logger.info(f"User registered: {db_user.email}")
         return db_user
     except Exception as e:
