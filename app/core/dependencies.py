@@ -10,6 +10,6 @@ async def shutdown_db(): # Функция для закрытия базы да�
     await SessionLocal.close_all()
 
 
-async def get_db(): # Функция для получения базы данных
+async def get_db():
     async with SessionLocal() as session:
         yield session

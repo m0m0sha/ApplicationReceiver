@@ -1,6 +1,6 @@
 from telegram.ext import Application as TelegramApplication, CommandHandler
 from app import settings
-from app.telegram_bot.handlers import start, apply, register, register_user
+from app.telegram_bot.handlers import start, apply, register
 
 TOKEN = settings.TELEGRAM_TOKEN # Токен бота
 
@@ -8,7 +8,6 @@ telegram_application = TelegramApplication.builder().token(TOKEN).build() # Ин
 telegram_application.add_handler(CommandHandler("start", start))
 telegram_application.add_handler(CommandHandler("apply", apply))
 telegram_application.add_handler(CommandHandler("register", register))
-telegram_application.add_handler(CommandHandler("register_user", register_user))
 
 
 async def run_telegram_bot(): # Запуск бота

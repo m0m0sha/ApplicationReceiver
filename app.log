@@ -16,3 +16,28 @@ email
   value is not a valid email address: The email address is not valid. It must have exactly one @-sign. [type=value_error, input_value='email', input_type=str]
 2024-07-04 23:25:14,229 - app.utils.logger - INFO - User registered: email@mail.ru
 2024-07-04 23:25:34,415 - app.utils.logger - INFO - Applications fetched successfully
+2024-07-11 19:43:27,934 - app.utils.logger - INFO - Sent start message successfully
+2024-07-11 19:43:33,600 - app.utils.logger - INFO - Empty application text sent
+2024-07-11 19:43:39,518 - app.utils.logger - ERROR - Error while adding to db: 'Depends' object has no attribute 'add'
+2024-07-11 19:46:19,367 - app.utils.logger - INFO - Empty application text sent
+2024-07-11 19:46:25,730 - app.utils.logger - ERROR - ќшибка при добавлении модели в базу данных: 'Depends' object has no attribute 'add'
+2024-07-11 19:51:46,370 - app.utils.logger - INFO - Applications fetched successfully
+2024-07-11 20:47:04,697 - app.utils.logger - ERROR - Unhandled Exception: 'ApplicationCreate' object has no attribute 'text'
+2024-07-11 21:07:42,743 - app.utils.logger - INFO - Application sent: Zayavka
+2024-07-11 21:07:53,471 - app.utils.logger - ERROR - Unhandled Exception: 'ApplicationCreate' object has no attribute 'text'
+2024-07-11 21:08:31,540 - app.utils.logger - INFO - User registered: 123@mail.ru
+2024-07-11 21:10:27,431 - app.utils.logger - INFO - User registered: 1123@mail.ru
+2024-07-11 21:19:03,681 - app.utils.logger - INFO - Applications fetched successfully
+2024-07-11 21:19:08,488 - app.utils.logger - ERROR - HTTP error: User with email '111' not found
+2024-07-11 21:19:08,489 - app.utils.logger - ERROR - User with email '111' not found
+2024-07-11 21:19:08,490 - app.utils.logger - ERROR - User Not Found: User with email '111' not found
+2024-07-11 21:23:37,547 - app.utils.logger - INFO - User authenticated: 1123@mail.ru
+2024-07-11 21:24:16,595 - app.utils.logger - ERROR - HTTP Exception: Not authenticated
+2024-07-11 21:24:30,057 - app.utils.logger - ERROR - HTTP Exception: Not authenticated
+2024-07-11 21:54:00,746 - app.utils.logger - ERROR - Unexpected error in register function: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.UniqueViolationError'>: повтор€ющеес€ значение ключа нарушает ограничение уникальности "ix_users_email"
+DETAIL:   люч "(email)=(1123@mail.ru)" уже существует.
+[SQL: INSERT INTO users (email, hashed_password) VALUES ($1::VARCHAR, $2::VARCHAR) RETURNING users.id]
+[parameters: ('1123@mail.ru', '$2b$12$z3sZphMXQsdcf4ZkT7pQ/e03W5aEAffSnWxZaNssPo.YXOqkwYQkK')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2024-07-11 21:55:42,066 - app.utils.logger - INFO - Empty application text sent
+2024-07-11 21:56:16,105 - app.utils.logger - INFO - Application sent: apply

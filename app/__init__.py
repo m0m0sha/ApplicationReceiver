@@ -3,8 +3,13 @@ from app.api import applications, auth, users
 from app.core.config import settings
 from app.core.dependencies import init_db, shutdown_db
 from app.telegram_bot.bot import run_telegram_bot, stop_telegram_bot
+from app.utils.errors import register_exception_handlers
+from app.utils.middleware import register_middlewares
 
 app = FastAPI() # Инициализация приложения
+
+register_middlewares(app)
+register_exception_handlers(app) # Регистрация обработчиков исключений
 
 
 @app.on_event("startup") # Событие запуска приложения
