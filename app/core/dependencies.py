@@ -16,7 +16,7 @@ async def get_db():
 
 
 async def add_to_db(model):
-    async with SessionLocal() as db:
-        db.add(model)
-        await db.commit()
-        await db.refresh(model)
+    async with SessionLocal() as session:
+        session.add(model)
+        await session.commit()
+        await session.refresh(model)
