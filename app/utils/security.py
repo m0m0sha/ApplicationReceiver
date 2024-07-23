@@ -1,33 +1,32 @@
-from datetime import datetime, timedelta
 from passlib.context import CryptContext
-from jose import JWTError, jwt
+from datetime import datetime, timedelta
+from jose import jwt
 from app.core.config import settings
+from app.utils.errors import InvalidToken
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto") # контекст для хеширования пароля
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 
-def hash_password(password: str) -> str: # Хэширование пароля
+def hash_password(password: str) -> str: # функция для хеширования пароля
     return pwd_context.hash(password)
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool: # Проверка пароля
+def verify_password(plain_password: str, hashed_password: str) -> bool: # функция для проверки хешированного пароля
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(data: dict, expires_delta: timedelta = None) -> str: # Генерация токена
+def create_access_token(data: dict) -> str: # функция для создания токена
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
-    return encoded_jwt
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def decode_access_token(token: str) -> dict: # Декодирование токена
+def decode_access_token(token: str) -> dict: # функция для декодирования токена
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        return payload
-    except JWTError:
-        return None
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except jwt.JWTError as e:
+        raise InvalidToken(f"Invalid token: {str(e)}")

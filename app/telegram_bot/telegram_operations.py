@@ -1,11 +1,12 @@
 from telegram.ext import ContextTypes
 from app.utils.errors import SendMessageError
-from app.utils.logger import logger
 
 
-async def send_message(context: ContextTypes.DEFAULT_TYPE, chat_id: int, text: str):
+# функция для отправки сообщения в чат
+async def send_message(user_id: int, text: str, context: ContextTypes.DEFAULT_TYPE):
     try:
-        await context.bot.send_message(chat_id=chat_id, text=text)
+        await context.bot.send_message(chat_id=user_id, text=text)
     except Exception as e:
-        logger.error(f"Error while sending message: {e}")
-        raise SendMessageError(f"Error while sending message: {e}")
+        raise SendMessageError(f"Failed to send message to user {user_id}: {str(e)}")
+
+

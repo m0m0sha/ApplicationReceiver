@@ -1,16 +1,16 @@
 from pydantic import BaseModel, EmailStr, constr
 
 
-class ApplicationCreate(BaseModel): # Схема для создания заявки
+class ApplicationCreate(BaseModel): # cхема для создания заявки
     application: constr(min_length=1, max_length=1000, strip_whitespace=True)
 
 
-class UserCreate(BaseModel): # Схема для создания пользователя
+class UserCreate(BaseModel): # cхема для создания пользователя
     email: EmailStr
     password: constr(min_length=8)
 
 
-class UserOut(BaseModel): # Схема для вывода информации о пользователе
+class UserOut(BaseModel): # cхема для получения информации о пользователе
     id: int
     email: EmailStr
 
@@ -18,11 +18,11 @@ class UserOut(BaseModel): # Схема для вывода информации 
         orm_mode = True
 
 
-class UserAuthenticate(BaseModel): # Схема для аутентификации пользователя
+class UserAuthenticate(BaseModel): # cхема для аутентификации
     email: EmailStr
     password: str
 
 
-class TokenResponse(BaseModel): # Схема для возвращения токена
+class TokenResponse(BaseModel): # cхема для получения токена
     access_token: str
     token_type: str

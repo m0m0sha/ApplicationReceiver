@@ -4,20 +4,20 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
-DATABASE_URL = settings.DATABASE_URL # URL для подключения к базе данных
+DATABASE_URL = settings.DATABASE_URL
 
-engine = create_async_engine(DATABASE_URL, echo=True) # Создание движка для подключения к базе данных
-SessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False) # Создание сессии для подключения к бд
-Base = declarative_base() # Создание базы данных
+engine = create_async_engine(DATABASE_URL, echo=True) # создаем движок для подключения к базе данных
+SessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False) # создаем сессию
+Base = declarative_base() # создаем базовый класс для моделей
 
 
-class Application(Base): # Модель для хранения заявок
+class Application(Base): # таблица для хранения заявок
     __tablename__ = "applications"
     id = Column(Integer, primary_key=True, index=True)
     application = Column(String, index=True)
 
 
-class User(Base): # Модель для хранения пользователей
+class User(Base): # таблица для хранения пользователей
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
