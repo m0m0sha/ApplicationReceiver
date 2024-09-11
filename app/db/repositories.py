@@ -1,7 +1,8 @@
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from app.db.models import Application, User, SessionLocal
+from app.db.models import Application, User, SessionLocal, Feedback
+from app.utils.logger import logger
 
 
 class ApplicationRepository: # репозиторий для работы с заявками
@@ -35,6 +36,13 @@ class ApplicationRepository: # репозиторий для работы с з�
             await db.refresh(application)
             return application
 
+    @staticmethod
+    async def get_applications_by_user_id(user_id: int):
+        async with SessionLocal() as db:
+            query = select(Application).filter(Application.user_id == user_id)
+            result = await db.execute(query)
+            return result.scalars().all()
+
 
 class UserRepository: # репозиторий для работы с пользователями
     @staticmethod
@@ -50,3 +58,23 @@ class UserRepository: # репозиторий для работы с польз
             await db.commit()
             await db.refresh(user)
             return user
+
+    @staticmethod
+    async def save_feedback(user_id: int, feedback_text: str):
+        # Пример сохранения отзыва в базе данных
+        async with SessionLocal() as db:
+            feedback = Feedback(user_id=user_id, feedback=feedback_text)
+            db.add(feedback)
+            await db.commit()
+            await db.refresh(feedback)
+
+
+class FeedbackRepository:
+    @staticmethod
+    async def add_feedback(user_id: int, feedback_text: str):
+        async with SessionLocal() as db:
+            feedback = Feedback(user_id=user_id, feedback=feedback_text)
+            db.add(feedback)
+            await db.commit()
+            await db.refresh(feedback)
+            return feedback

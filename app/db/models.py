@@ -15,6 +15,8 @@ class Application(Base): # таблица для хранения заявок
     __tablename__ = "applications"
     id = Column(Integer, primary_key=True, index=True)
     application = Column(String, index=True)
+    user_id = Column(Integer, nullable=False)
+    status = Column(String, default="Wait for answer")
 
 
 class User(Base): # таблица для хранения пользователей
@@ -22,3 +24,11 @@ class User(Base): # таблица для хранения пользовате�
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
+
+
+class Feedback(Base):
+    __tablename__ = "feedbacks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer)
+    feedback = Column(String)

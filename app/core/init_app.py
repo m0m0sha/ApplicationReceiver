@@ -3,7 +3,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler
 from app.core.dependencies import init_db, shutdown_db
 from app.api import applications, auth, users
 from app.core.config import settings
-from app.telegram_bot.handlers import start, apply, register
+from app.telegram_bot.handlers import start, apply, register, my_applications, feedback
 
 TOKEN = settings.TELEGRAM_TOKEN
 
@@ -23,6 +23,9 @@ def create_app() -> FastAPI: # функция для создания прило
         app.bot.add_handler(CommandHandler("start", start))
         app.bot.add_handler(CommandHandler("apply", apply))
         app.bot.add_handler(CommandHandler("register", register))
+        app.bot.add_handler(CommandHandler("my_applications", my_applications))
+        app.bot.add_handler(CommandHandler("feedback", feedback))
+
         await app.bot.initialize()
         await app.bot.start()
         await app.bot.updater.start_polling()

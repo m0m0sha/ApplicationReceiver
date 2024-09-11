@@ -27,3 +27,4 @@ class UserService: # сервис для работы с пользовател�
             raise UserNotFound(email=user_email)
 
         return UserOut.from_orm(user)
+
